@@ -1,0 +1,40 @@
+services:
+  backend:
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - "./backend_Project/backend:/app_backend/backend"
+    build: 
+      context: .
+      dockerfile: /backend_Project/docker/python/Dockerfile
+    ports:
+      - "8000:8000"
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Tokyo" 
+    volumes:
+      - "./mysql_data:/var/lib/mysql"
+    ports:
+      - 3306:3306 
+
+  frontend:
+    volumes:
+      - "./frontend_Project/frontend/src:/app_frontend/frontend/src"
+      - "./frontend_Project/frontend/public:/app_frontend/frontend/public"
+    build: 
+      context: .
+      dockerfile: /frontend_Project/docker/node/Dockerfile
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:
